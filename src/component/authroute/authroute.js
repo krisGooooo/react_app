@@ -23,7 +23,7 @@ class AuthRoute extends React.Component{
     }
 
     render(){
-        return <p>divide</p>
+        return null
     }
 }
 
