@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter,Route,Redirect,Switch} from 'react-router-dom'
 
 import AuthRoute from './component/authroute/authroute'
+import BossInfo from './container/bossinfo/bossinfo'
 // import { counter } from './index.redux'
 import reducers from './reducer'
 import './config'
@@ -26,9 +27,11 @@ ReactDom.render(
             <BrowserRouter>
                 <div>
                     <AuthRoute></AuthRoute>
-                    <Route path='/boss' component={Boss}></Route>
-                    <Route path='/login' component={Login}></Route>
-                    <Route path='/register' component={Register}></Route>
+                    <Switch>
+                        <Route path='/bossinfo' component={BossInfo}></Route>
+                        <Route path='/login' component={Login}></Route>
+                        <Route path='/register' component={Register}></Route>
+                    </Switch>
                 </div>
             </BrowserRouter>
         </Provider>
