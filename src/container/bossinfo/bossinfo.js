@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {NavBar,InputItem,TextareaItem} from 'antd-mobile'
+import {NavBar,InputItem,TextareaItem,Button} from 'antd-mobile'
 import AvatarSelector from '../../component/avatar-selector/avatar-selector'
 class BossInfo extends React.Component{
     constructor(props){
@@ -19,7 +19,13 @@ class BossInfo extends React.Component{
         return (
             <div>
                 <NavBar mode="dark">Boss 完善信息页</NavBar>
-                <AvatarSelector></AvatarSelector>
+                <AvatarSelector
+                    selectAvatar={(imgname)=>{
+                        this.setState({
+                            avatar:imgname
+                        })
+                    }}
+                ></AvatarSelector>
                 <InputItem onChange={(v)=>this.onChange('title',v)}>
                     招聘职位
                 </InputItem>
@@ -36,6 +42,7 @@ class BossInfo extends React.Component{
                     title='职位要求'
                 >
                 </TextareaItem>
+                <Button type='primary'>保存</Button>
             </div>
         )
     }
