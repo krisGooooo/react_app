@@ -8,7 +8,6 @@ import { Redirect } from 'react-router-dom';
 @connect(
     state=>state.user,
     {update}
-
 )
 
 class GeniusInfo extends React.Component{
@@ -26,12 +25,12 @@ class GeniusInfo extends React.Component{
         })
     }
     render(){
-        const path = this.props.location.pathname
-        const redirect = this.props.redirectTo
+        const path = this.props.location.pathname;
+        const redirect = this.props.redirectTo;
+        console.log([path,this.props])
         return (
             <div>
-                {redirect&&redirect!==path? <Redirect to={this.props.redirectTo}></Redirect>:null}
-
+                {redirect&&redirect!==path?<Redirect to={this.props.redirectTo}></Redirect>:null}
                 <NavBar mode="dark">牛人 完善信息页</NavBar>
                 <AvatarSelector
                     selectAvatar={(imgname)=>{

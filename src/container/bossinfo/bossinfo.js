@@ -8,7 +8,6 @@ import { Redirect } from 'react-router-dom';
 @connect(
     state=>state.user,
     {update}
-
 )
 
 class BossInfo extends React.Component{
@@ -30,6 +29,8 @@ class BossInfo extends React.Component{
     render(){
         const path = this.props.location.pathname
         const redirect = this.props.redirectTo
+        console.log([path,redirect])
+
         return (
             <div>
                 {redirect&&redirect!==path? <Redirect to={this.props.redirectTo}></Redirect>   :null}
