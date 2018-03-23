@@ -30,6 +30,22 @@ Router.get('/getmsglist',function(req,res) {
     })
     // {'$or':[{from:user,to:user}]
 })
+Router.post('/readmsg',function(req,res) {
+    const userid = req.cookies.userid
+    const {from} = req.body
+    console.log(userid,from)
+    Chat.update(
+        {from,to:userid},
+        {'$set':{read:true}},
+        {'multi':true},
+        function (err,doc) {
+        console.log(doc)
+        if(!err){
+            return res.json({code:0,num:doc.nModified})
+        }
+        return res.json({code:1,msg:'修改失败'})
+    }) 
+})
 Router.post('/update',function (req,res) {
     const userid = req.cookies.userid
     if (!userid){
