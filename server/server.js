@@ -4,8 +4,8 @@ const cookieParser = require('cookie-parser')
 const userRouter = require('./user')
 const app = express()
 const model = require('./model')
-const User = model.getModel('user')
 const Chat = model.getModel('chat')
+const path = require('path')
 //work with express
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
@@ -26,7 +26,14 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 
 app.use('/user',userRouter)
+app.use(function(req,res,next){
+    if(req.url.startsWith('/user/')||req.url.startsWith('/static/')){
+        return next()
+    }
 
+    return res.sendFile(path.resolve('build/index.html'))
+})
+app.use('/',express.static(path.resolve('build')))
 server.listen(9093,function () {
     console.log('Node app start at port 9093')
 })
