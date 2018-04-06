@@ -10,9 +10,22 @@ import Register from './container/register/register'
 import {Route,Switch} from 'react-router-dom'
 
 class App extends React.Component{
-    
+    constructor(props){
+        super(props)
+        this.state={
+            hasError:false
+        }
+    }
+    componentDidCatch(err,info){
+        console.log(err,info)
+        this.setState({
+            hasError:true
+        }) 
+    }
     render(){
-        return (
+        return this.state.hasError
+        ?<h2>页面出错了！请联系krisGooooo：851837721@qq.com </h2>
+        :(
         <div>   
             <AuthRoute></AuthRoute>
             <Switch>

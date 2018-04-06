@@ -8,8 +8,9 @@ import thunk from 'redux-thunk'
 import { StaticRouter} from 'react-router-dom'
 import App from '../src/app'
 import reducers from '../src/reducer';
+import staticPath from '../build/asset-manifest.json'
 assethook({
-    extensions:['png']
+    extensions:['png','ico']
 })
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -57,6 +58,8 @@ app.use(function(req,res,next){
         applyMiddleware(thunk)
     ))
     let context={}
+
+
     const markup=renderToString((
         <Provider store={store}>
             <StaticRouter
@@ -67,8 +70,33 @@ app.use(function(req,res,next){
             </StaticRouter>
         </Provider>
     ))
-    const htmlRes =(<App></App>)
-    res.send(htmlRes)
+    const obj={
+        '/msg':'React聊天消息列表',
+        '/boss':'boss查看牛人列表页面'
+    }
+    const pageHtml = `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#000000">
+        <title>React App</title>
+        <link rel="stylesheet" href="/${staticPath['main.css']}">
+        <meta name="keywords" content="React,聊天，app,SSR,Redux">
+        <meta name="description" content='${obj[req.url]}'>
+        <meta name="author" content="krisGooooo">
+        
+      </head>
+      <body>
+        <noscript>
+          You need to enable JavaScript to run this app.
+        </noscript>
+        <div id="root">${markup}</div>
+        <script src="/${staticPath['main.js']}"></script>
+      </body>
+    </html>
+    `
+    res.send(pageHtml)
 })
 app.use('/',express.static(path.resolve('build')))
 server.listen(9093,function () {
