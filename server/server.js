@@ -1,4 +1,4 @@
-import {renderToString} from 'react-dom/server'
+import {renderToString,renderToNodeStream} from 'react-dom/server'
 import React from 'react'
 import {Provider} from 'react-redux'
 import csshook from 'css-modules-require-hook/preset'
@@ -60,21 +60,21 @@ app.use(function(req,res,next){
     let context={}
 
 
-    const markup=renderToString((
-        <Provider store={store}>
-            <StaticRouter
-                location={req.url}
-                context={context}
-            >
-                <App></App>
-            </StaticRouter>
-        </Provider>
-    ))
+    // const markup=renderToString((
+    //     <Provider store={store}>
+    //         <StaticRouter
+    //             location={req.url}
+    //             context={context}
+    //         >
+    //             <App></App>
+    //         </StaticRouter>
+    //     </Provider>
+    // ))
     const obj={
         '/msg':'React聊天消息列表',
         '/boss':'boss查看牛人列表页面'
     }
-    const pageHtml = `<!DOCTYPE html>
+    res.write(`<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="utf-8">
@@ -91,12 +91,49 @@ app.use(function(req,res,next){
         <noscript>
           You need to enable JavaScript to run this app.
         </noscript>
-        <div id="root">${markup}</div>
+        <div id="root">`)
+
+    // react 16 api rendertonodestream
+    const markupStream=renderToNodeStream((
+        <Provider store={store}>
+            <StaticRouter
+                location={req.url}
+                context={context}
+            >
+                <App></App>
+            </StaticRouter>
+        </Provider>
+    ))
+    markupStream.pipe(res,{end:false})
+    markupStream.on('end',()=>{
+        res.write(`</div>
         <script src="/${staticPath['main.js']}"></script>
       </body>
-    </html>
-    `
-    res.send(pageHtml)
+    </html>`)
+    res.end()
+    })
+    // const pageHtml = `<!DOCTYPE html>
+    // <html lang="en">
+    //   <head>
+    //     <meta charset="utf-8">
+    //     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    //     <meta name="theme-color" content="#000000">
+    //     <title>React App</title>
+    //     <link rel="stylesheet" href="/${staticPath['main.css']}">
+    //     <meta name="keywords" content="React,聊天，app,SSR,Redux">
+    //     <meta name="description" content='${obj[req.url]}'>
+    //     <meta name="author" content="krisGooooo">
+        
+    //   </head>
+    //   <body>
+    //     <noscript>
+    //       You need to enable JavaScript to run this app.
+    //     </noscript>
+    //     <div id="root">${markup}</div>
+    //     <script src="/${staticPath['main.js']}"></script>
+    //   </body>
+    // </html>
+    // `
 })
 app.use('/',express.static(path.resolve('build')))
 server.listen(9093,function () {
